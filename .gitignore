@@ -1,0 +1,8 @@
+# Kdevelop files
+*.kate-swp
+*.kdev4
+build/*
+.kdev4/*
+
+# 3rd party libraries
+box2d/*
