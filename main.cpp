@@ -1,11 +1,11 @@
 #include <iostream>
 #include "box2d/box2d.h"
 
+#include "physics.h"
+
 int main(int argc, char **argv) {
-    // Init world
-    b2WorldDef world_def = b2DefaultWorldDef();
-    world_def.gravity = {0.0f,-10.0f};
-    b2WorldId world_id = b2CreateWorld(&world_def);
+    // Initialize physics
+    InitPhysics();
 
     // Create ground body
     b2BodyDef ground_body_def = b2DefaultBodyDef();
@@ -27,10 +27,10 @@ int main(int argc, char **argv) {
     b2CreatePolygonShape(physics_body_id, &physics_body_shape_def, &physics_body_box);
 
     // Simulate
-    float timeStep = 1.0f / 60.0f;
-    int subStepCount = 4;
+    float timestep = 1.0f / 60.0f;
+    int substep_count = 4;
     for (int i = 0; i < 90; i++) {
-        b2World_Step(world_id, timeStep, subStepCount);
+        PhysicsStep(timestep, substep_count);
         b2Vec2 position = b2Body_GetPosition(physics_body_id);
         b2Rot rotation = b2Body_GetRotation(physics_body_id);
         printf("%4.2f %4.2f %4.2f\n", position.x, position.y, b2Rot_GetAngle(rotation));
