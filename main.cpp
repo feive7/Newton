@@ -1,41 +1,28 @@
 #include <iostream>
+#include "raylib.h"
 #include "box2d/box2d.h"
 
 #include "physics.h"
 
 int main(int argc, char **argv) {
-    // Initialize physics
-    InitPhysics();
+    // Define window dimensions
+    const int window_width = 800;
+    const int window_height = 450;
 
-    // Create ground body
-    b2BodyDef ground_body_def = b2DefaultBodyDef();
-    ground_body_def.position = {0.0f,-10.0f};
-    b2BodyId ground_id = b2CreateBody(world_id, &ground_body_def);
-    b2Polygon ground_box = b2MakeBox(50.0f,10.0f);
-    b2ShapeDef ground_shape_def = b2DefaultShapeDef();
-    b2CreatePolygonShape(ground_id, &ground_shape_def, &ground_box);
+    // Create window
+    InitWindow(window_width,window_height,"Newton");
+    SetTargetFPS(60);
 
-    // Create physics body
-    b2BodyDef physics_body_def = b2DefaultBodyDef();
-    physics_body_def.type = b2_dynamicBody;
-    physics_body_def.position = {0.0f,4.0f};
-    b2BodyId physics_body_id = b2CreateBody(world_id, &physics_body_def);
-    b2Polygon physics_body_box = b2MakeBox(1.0f,1.0f);
-    b2ShapeDef physics_body_shape_def = b2DefaultShapeDef();
-    physics_body_shape_def.density = 1.0f;
-    physics_body_shape_def.material.friction = 0.3f;
-    b2CreatePolygonShape(physics_body_id, &physics_body_shape_def, &physics_body_box);
-
-    // Simulate
-    float timestep = 1.0f / 60.0f;
-    int substep_count = 4;
-    for (int i = 0; i < 90; i++) {
-        PhysicsStep(timestep, substep_count);
-        b2Vec2 position = b2Body_GetPosition(physics_body_id);
-        b2Rot rotation = b2Body_GetRotation(physics_body_id);
-        printf("%4.2f %4.2f %4.2f\n", position.x, position.y, b2Rot_GetAngle(rotation));
+    // Main loop
+    while(!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawText("Hello Raylib!",5,5,20,BLACK);
+        EndDrawing();
     }
 
-    std::cout << "Hello, world!" << std::endl;
+    // Destroy window
+    CloseWindow();
+
     return 0;
 }
