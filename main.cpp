@@ -33,15 +33,25 @@ int main(int argc, char **argv) {
     // Create physics box
     Box box({0,10},{1,1},false);
 
+    // Create physics ball
+    Ball ball({10,10},4.0f,false);
+
     // Main loop
     while(!WindowShouldClose()) {
         PhysicsStep(timestep, substep_count);
+
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            Vector2 mousepos = GetScreenToWorld2D(GetMousePosition(),viewport);
+            Vector2 direction = mousepos - box.getPos();
+            box.setVelocity(direction * 10);
+        }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         ground.draw();
         box.draw();
+        ball.draw();
         EndMode2D();
         EndDrawing();
     }
