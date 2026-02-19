@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
     const int window_height = 450;
 
     // Create window
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(window_width,window_height,"Newton");
     SetTargetFPS(60);
 
@@ -32,13 +33,14 @@ int main(int argc, char **argv) {
     Box ground({0,0},{20,2},true);
 
     // Create physics box
-    Box box({0,10},{10,1},false);
+    Box box({0,10},{1,1},false);
 
     // Create physics ball
     Ball ball({10,10},4.0f,false);
 
     // Connect them with a distance joint
-    Slider slider(&box,&ball);
+    Weld* weld = nullptr;
+    bool welded = false;
 
     // Main loop
     while(!WindowShouldClose()) {
@@ -49,6 +51,16 @@ int main(int argc, char **argv) {
             Vector2 direction = mousepos - box.getPos();
             box.setVelocity(direction * 10);
         }
+        if(IsKeyPressed(KEY_SPACE)) {
+            if(welded) {
+                delete weld;
+            }
+            else {
+                weld = new Weld(&box,&ball);
+            }
+            welded = !welded;
+        }
+
 
         BeginDrawing();
         ClearBackground(RAYWHITE);

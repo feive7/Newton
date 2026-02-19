@@ -3,9 +3,15 @@ class Joint {
 protected:
     b2JointId id;
 public:
+    ~Joint() {
+        destroy();
+    }
     b2JointType getType() { return b2Joint_GetType(id); }
     b2BodyId getBodyA() { return b2Joint_GetBodyA(id); }
     b2BodyId getBodyB() { return b2Joint_GetBodyB(id); }
+    void destroy() {
+        b2DestroyJoint(id);
+    }
 };
 class Hinge : public Joint {
 public:
@@ -32,6 +38,7 @@ public:
         b2WeldJointDef weld_joint_def = b2DefaultWeldJointDef();
         weld_joint_def.bodyIdA = body_a->id;
         weld_joint_def.bodyIdB = body_b->id;
+        weld_joint_def.localAnchorA = b2Body_GetLocalPoint(body_a->id,b2Body_GetPosition(body_b->id));
         this->id = b2CreateWeldJoint(world_id,&weld_joint_def);
     }
 };
