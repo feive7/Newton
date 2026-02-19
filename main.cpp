@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     Ball ball({10,10},4.0f,false);
 
     // Connect them with a distance joint
-    Weld weld(&box,&ball);
+    Slider slider(&box,&ball);
 
     // Main loop
     while(!WindowShouldClose()) {

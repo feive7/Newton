@@ -35,3 +35,23 @@ public:
         this->id = b2CreateWeldJoint(world_id,&weld_joint_def);
     }
 };
+
+class Slider : public Joint{
+public:
+    Slider(Body* body_a, Body* body_b) {
+        b2PrismaticJointDef prismatic_joint_def = b2DefaultPrismaticJointDef();
+        prismatic_joint_def.bodyIdA = body_a->id;
+        prismatic_joint_def.bodyIdB = body_b->id;
+        this->id = b2CreatePrismaticJoint(world_id,&prismatic_joint_def);
+    }
+};
+
+class TestJoint : public Joint{
+public:
+    TestJoint(Body* body_a, Body* body_b) {
+        auto joint_def = b2DefaultPrismaticJointDef();
+        joint_def.bodyIdA = body_a->id;
+        joint_def.bodyIdB = body_b->id;
+        this->id = b2CreatePrismaticJoint(world_id,&joint_def);
+    }
+};
