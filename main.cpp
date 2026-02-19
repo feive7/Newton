@@ -32,13 +32,13 @@ int main(int argc, char **argv) {
     Box ground({0,0},{20,2},true);
 
     // Create physics box
-    Box box({0,10},{1,1},false);
+    Box box({0,10},{10,1},false);
 
     // Create physics ball
     Ball ball({10,10},4.0f,false);
 
     // Connect them with a distance joint
-    DistanceJoint distance_joint(&box,&ball,20);
+    Weld weld(&box,&ball);
 
     // Main loop
     while(!WindowShouldClose()) {
@@ -54,7 +54,6 @@ int main(int argc, char **argv) {
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         ground.draw();
-        distance_joint.draw();
         box.draw();
         ball.draw();
         EndMode2D();
