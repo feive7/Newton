@@ -3,14 +3,15 @@ inline Vector2 B2R(b2Vec2 vec) { return {vec.x,vec.y}; }
 inline b2Vec2 R2B(Vector2 vec) { return {vec.x,vec.y}; }
 class Body {
 protected:
-    b2BodyId id;
 public:
+    b2BodyId id;
     Body() {}
     Body(b2BodyId id) : id(id) {}
     Vector2 getPos() { return B2R(b2Body_GetPosition(id)); }
     float getAng() { return b2Rot_GetAngle(b2Body_GetRotation(id)); }
 
     void setVelocity(Vector2 new_velocity) { b2Body_SetLinearVelocity(id, R2B(new_velocity)); }
+
 };
 
 class Box : public Body {

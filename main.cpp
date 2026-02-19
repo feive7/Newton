@@ -5,6 +5,7 @@
 
 #include "physics.h"
 #include "collisions.h"
+#include "constraints.h"
 
 int main(int argc, char **argv) {
     // Define window dimensions
@@ -36,6 +37,9 @@ int main(int argc, char **argv) {
     // Create physics ball
     Ball ball({10,10},4.0f,false);
 
+    // Connect them with a distance joint
+    DistanceJoint distance_joint(&box,&ball,20);
+
     // Main loop
     while(!WindowShouldClose()) {
         PhysicsStep(timestep, substep_count);
@@ -50,6 +54,7 @@ int main(int argc, char **argv) {
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         ground.draw();
+        distance_joint.draw();
         box.draw();
         ball.draw();
         EndMode2D();
