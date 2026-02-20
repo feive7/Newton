@@ -13,6 +13,16 @@ public:
         b2DestroyJoint(id);
     }
 };
+class Pin : public Joint {
+public:
+    Pin(Body* body_a, Body* body_b) {
+        b2RevoluteJointDef revolute_joint_def = b2DefaultRevoluteJointDef();
+        revolute_joint_def.bodyIdA = body_a->id;
+        revolute_joint_def.bodyIdB = body_b->id;
+        this->id = b2CreateRevoluteJoint(world_id,&revolute_joint_def);
+    }
+
+};
 class Hinge : public Joint {
 public:
     Hinge(Body* body_a, Body* body_b, float length) {

@@ -5,6 +5,7 @@
 
 #include "physics.h"
 #include "collisions.h"
+#include "custombody.h"
 #include "constraints.h"
 
 int main(int argc, char **argv) {
@@ -30,17 +31,19 @@ int main(int argc, char **argv) {
     int substep_count = 4;
 
     // Create ground
-    Box ground({0,0},{20,2},true);
+    //Box ground({0,0},{20,2},true);
 
-    // Create physics box
-    Box box({0,10},{1,1},false);
+    // Create circle box body
+    ShapeBunch circle_box_shape = ShapeBunch().addBox({0,0},{1,1}).addCircle({0,2},1); // Define shape
+    CustomBody circle_box_body({0,10},circle_box_shape,false); // Construct a body using the shape
 
-    // Create physics ball
-    Ball ball({10,10},4.0f,false);
+    // Create box segment body
+    ShapeBunch box_seg_shape = ShapeBunch().addBox({-10,0},{1,1}).addBox({10,0},{1,1}).addSegment({-10,0},{10,0});
+    CustomBody box_seg_body({0,5},box_seg_shape,false);
 
-    // Connect them with a distance joint
-    Weld* weld = nullptr;
-    bool welded = false;
+    // Pin the box segment body
+    Empty empty = Empty({0,0});
+    Pin pin = Pin(&empty,&box_seg_body);
 
     // Main loop
     while(!WindowShouldClose()) {
@@ -48,26 +51,20 @@ int main(int argc, char **argv) {
 
         if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             Vector2 mousepos = GetScreenToWorld2D(GetMousePosition(),viewport);
-            Vector2 direction = mousepos - box.getPos();
-            box.setVelocity(direction * 10);
-        }
-        if(IsKeyPressed(KEY_SPACE)) {
-            if(welded) {
-                delete weld;
-            }
-            else {
-                weld = new Weld(&box,&ball);
-            }
-            welded = !welded;
+            Vector2 direction = mousepos - circle_box_body.getPos();
+            circle_box_body.setVelocity(direction * 10);
         }
 
+        //Vector2 position = custom_body.getPos();
+        //float angle = custom_body.getAng();
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
-        ground.draw();
-        box.draw();
-        ball.draw();
+        //ground.draw();
+        circle_box_body.draw();
+        box_seg_body.draw();
+        empty.draw();
         EndMode2D();
         EndDrawing();
     }
