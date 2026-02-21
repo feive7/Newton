@@ -11,9 +11,23 @@ public:
     Vector2 getPos() { return B2R(b2Body_GetPosition(id)); }
     float getAng() { return b2Rot_GetAngle(b2Body_GetRotation(id)); }
     float getMass() { return b2Body_GetMass(id); }
-
     void setVelocity(Vector2 new_velocity) { b2Body_SetLinearVelocity(id, R2B(new_velocity)); }
-
+    void setFriction(float new_friction) {
+        b2ShapeId shapes[10];
+        int shape_count = b2Body_GetShapes(id,shapes,10);
+        for(int i = 0; i < shape_count; i++) {
+            b2ShapeId shape = shapes[i];
+            b2Shape_SetFriction(shape, new_friction);
+        }
+    }
+    void setBounciness(float new_bounciness) {
+        b2ShapeId shapes[10];
+        int shape_count = b2Body_GetShapes(id,shapes,10);
+        for(int i = 0; i < shape_count; i++) {
+            b2ShapeId shape = shapes[i];
+            b2Shape_SetRestitution(shape, new_bounciness);
+        }
+    }
 };
 class Empty : public Body {
 public:
@@ -30,6 +44,7 @@ public:
     }
 };
 class Box : public Body {
+    b2ShapeId shape_id;
 public:
     Vector2 size;
     Box(Vector2 position, Vector2 size, bool fixed) : size(size) {
@@ -44,7 +59,7 @@ public:
         shape_def.density = 1.0f;
         shape_def.material.friction = 0.3f;
 
-        b2CreatePolygonShape(this->id, &shape_def, &box);
+        shape_id = b2CreatePolygonShape(this->id, &shape_def, &box);
     }
     void draw() {
         Vector2 position = getPos() - size;
@@ -57,6 +72,7 @@ public:
 };
 
 class Ball : public Body {
+    b2ShapeId shape_id;
 public:
     float radius;
     Ball(Vector2 position, float radius, bool fixed) : radius(radius) {

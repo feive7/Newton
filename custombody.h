@@ -4,10 +4,16 @@ enum ShapeType {
     Shape_Circle,
     Shape_Segment
 };
-struct Shape {
+class Shape {
+public:
+    b2ShapeId id;
     ShapeType type;
     Vector2 origin; // Box, Circle: {center_x, center_y} Segment: {startpoint_x, startpoint_y}
     Vector2 size; // Box: {halfwidth, halfheight} Circle: {radius, 0} Segment: {endpoint_x, endpoint_y}
+    float getFriction() { return b2Shape_GetFriction(id); }
+    float getBounciness() { return b2Shape_GetRestitution(id); }
+    void setFriction(float new_friction) { b2Shape_SetFriction(id, new_friction); }
+    void setBounciness(float new_bounciness) { b2Shape_SetRestitution(id, new_bounciness); }
 };
 void DrawShape(Shape shape, Vector2 position, float angle) {
     if(shape.type == Shape_Box) {
@@ -72,7 +78,7 @@ public:
                 shape_def.density = 1.0f;
                 shape_def.material.friction = 0.3f;
 
-                b2CreatePolygonShape(this->id, &shape_def, &box);
+                shape.id = b2CreatePolygonShape(this->id, &shape_def, &box);
             }
             else if(shape.type == Shape_Circle) {
                 b2Circle circle;
@@ -83,7 +89,7 @@ public:
                 shape_def.density = 1.0f;
                 shape_def.material.friction = 0.3f;
 
-                b2CreateCircleShape(this->id, &shape_def, &circle);
+                shape.id = b2CreateCircleShape(this->id, &shape_def, &circle);
             }
             else if(shape.type == Shape_Segment) {
                 b2Segment segment;
@@ -95,51 +101,10 @@ public:
                 shape_def.density = 1.0f;
                 shape_def.material.friction = 0.3f;
 
-                b2CreateSegmentShape(this->id, &shape_def, &segment);
+                shape.id = b2CreateSegmentShape(this->id, &shape_def, &segment);
             }
         }
         return *this;
-    }
-    CustomBody(Vector2 position, bool fixed) {
-        b2BodyDef body_def = b2DefaultBodyDef();
-        body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
-        body_def.position = {position.x,position.y};
-        this->id = b2CreateBody(world_id, &body_def);
-
-        for(int i = 0; i < shape_count; i++) {
-            Shape& shape = shapes[i];
-            if(shape.type == Shape_Box) {
-                b2Polygon box = b2MakeOffsetBox(shape.size.x,shape.size.y,{shape.origin.x,shape.origin.y},b2Rot_identity);
-                b2ShapeDef shape_def = b2DefaultShapeDef();
-                shape_def.density = 1.0f;
-                shape_def.material.friction = 0.3f;
-
-                b2CreatePolygonShape(this->id, &shape_def, &box);
-            }
-            else if(shape.type == Shape_Circle) {
-                b2Circle circle;
-                circle.center.x = shape.origin.x;
-                circle.center.y = shape.origin.y;
-                circle.radius = shape.size.x;
-                b2ShapeDef shape_def = b2DefaultShapeDef();
-                shape_def.density = 1.0f;
-                shape_def.material.friction = 0.3f;
-
-                b2CreateCircleShape(this->id, &shape_def, &circle);
-            }
-            else if(shape.type == Shape_Segment) {
-                b2Segment segment;
-                segment.point1.x = shape.origin.x;
-                segment.point1.y = shape.origin.y;
-                segment.point2.x = shape.size.x;
-                segment.point2.y = shape.size.y;
-                b2ShapeDef shape_def = b2DefaultShapeDef();
-                shape_def.density = 1.0f;
-                shape_def.material.friction = 0.3f;
-
-                b2CreateSegmentShape(this->id, &shape_def, &segment);
-            }
-        }
     }
     void draw() {
         Vector2 position = getPos();

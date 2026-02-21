@@ -35,9 +35,11 @@ int main(int argc, char **argv) {
 
     // Create circle box body
     CustomBody custom_body = CustomBody()
-    .addCircle({0,14},1)
     .addBox({0,0},{1,1})
-    .addSegment({0,0},{0,14})
+    .addCircle({2,0},.5)
+    .addCircle({0,2},.5)
+    .addCircle({-2,0},.5)
+    .addCircle({0,-2},.5)
     .build({0,10},false);
 
     // Main loop
@@ -48,6 +50,9 @@ int main(int argc, char **argv) {
             Vector2 mousepos = GetScreenToWorld2D(GetMousePosition(),viewport);
             Vector2 direction = mousepos - custom_body.getPos();
             custom_body.setVelocity(direction * 10);
+        }
+        if(IsKeyPressed(KEY_SPACE)) {
+            custom_body.setBounciness(1.0);
         }
 
         //Vector2 position = custom_body.getPos();
