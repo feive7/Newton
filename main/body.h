@@ -37,9 +37,4 @@ public:
         body_def.position = {position.x,position.y};
         this->id = b2CreateBody(world_id, &body_def);
     }
-    void draw() {
-        Vector2 position = getPos();
-        DrawLineV(position-Vector2{0,1},position+Vector2{0,1},BLACK);
-        DrawLineV(position-Vector2{1,0},position+Vector2{1,0},BLACK);
-    }
 };

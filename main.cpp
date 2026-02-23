@@ -4,6 +4,7 @@
 
 #include "newton.h"
 #include "plugins/primitivebody.h"
+#include "plugins/primitivejoint.h"
 
 int main(int argc, char **argv) {
     // Define window dimensions
@@ -27,11 +28,14 @@ int main(int argc, char **argv) {
     float timestep = 1.0f / 60.0f;
     int substep_count = 4;
 
-    // Create ground
-    Box ground({0,0},{10,1},true);
+    // Create box box
+    Box box({10,0},{1,1},false);
 
-    // Create dynamic body
-    Box body({0,10},{1,1},false);
+    // Create empty body to attach our box to
+    Empty empty({0,0});
+
+    // Attach them
+    DistanceJoint distance_joint(&box,&empty,10);
 
     // Main loop
     while(!WindowShouldClose()) {
@@ -40,8 +44,8 @@ int main(int argc, char **argv) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
-        ground.draw();
-        body.draw();
+        DrawCircleV({0,0},0.5f,GRAY);
+        DrawCircleV(box.getPos(),0.5f,RED);
         EndMode2D();
         EndDrawing();
     }
