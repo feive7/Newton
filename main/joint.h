@@ -1,8 +1,8 @@
 #pragma once
 class Joint {
 protected:
-    b2JointId id;
 public:
+    b2JointId id;
     ~Joint() {
         destroy();
     }
