@@ -29,13 +29,16 @@ int main(int argc, char **argv) {
     int substep_count = 4;
 
     // Create box box
-    Box box({10,0},{1,1},false);
+    Box box({10,10},{1,1},false);
 
     // Create empty body to attach our box to
     Empty empty({0,0});
 
     // Attach them
     DistanceJoint distance_joint(&box,&empty,10);
+    b2JointId id = distance_joint.id;
+    b2DistanceJoint_EnableSpring(id,true);
+    b2DistanceJoint_SetSpringHertz(id,0.5);
 
     // Main loop
     while(!WindowShouldClose()) {
