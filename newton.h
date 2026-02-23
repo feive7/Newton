@@ -3,3 +3,4 @@
 
 #include "main/world.h"
 #include "main/body.h"
+#include "main/joint.h"
