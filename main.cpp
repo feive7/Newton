@@ -36,9 +36,9 @@ int main(int argc, char **argv) {
 
     // Attach them
     DistanceJoint distance_joint(&box,&empty,10);
-    b2JointId id = distance_joint.id;
-    b2DistanceJoint_EnableSpring(id,true);
-    b2DistanceJoint_SetSpringHertz(id,0.5);
+    distance_joint.enableSpring();
+    distance_joint.setSpringHertz(0.5);
+    // b2JointId id = distance_joint.id;
 
     // Main loop
     while(!WindowShouldClose()) {
