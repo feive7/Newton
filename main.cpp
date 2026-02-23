@@ -1,12 +1,9 @@
 #include <iostream>
 #include "raylib.h"
 #include "raymath.h"
-#include "box2d/box2d.h"
 
-#include "physics.h"
-#include "collisions.h"
-#include "custombody.h"
-#include "constraints.h"
+#include "newton.h"
+#include "plugins/primitivebody.h"
 
 int main(int argc, char **argv) {
     // Define window dimensions
@@ -31,38 +28,20 @@ int main(int argc, char **argv) {
     int substep_count = 4;
 
     // Create ground
-    Box ground({0,0},{20,2},true);
+    Box ground({0,0},{10,1},true);
 
-    // Create circle box body
-    CustomBody custom_body = CustomBody()
-    .addBox({0,0},{1,1})
-    .addCircle({2,0},.5)
-    .addCircle({0,2},.5)
-    .addCircle({-2,0},.5)
-    .addCircle({0,-2},.5)
-    .build({0,10},false);
+    // Create dynamic body
+    Box body({0,10},{1,1},false);
 
     // Main loop
     while(!WindowShouldClose()) {
         PhysicsStep(timestep, substep_count);
 
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            Vector2 mousepos = GetScreenToWorld2D(GetMousePosition(),viewport);
-            Vector2 direction = mousepos - custom_body.getPos();
-            custom_body.setVelocity(direction * 10);
-        }
-        if(IsKeyPressed(KEY_SPACE)) {
-            custom_body.setBounciness(1.0);
-        }
-
-        //Vector2 position = custom_body.getPos();
-        //float angle = custom_body.getAng();
-
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         ground.draw();
-        custom_body.draw();
+        body.draw();
         EndMode2D();
         EndDrawing();
     }
