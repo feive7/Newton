@@ -1,18 +1,4 @@
 #pragma once
-class Empty : public Body {
-public:
-    Empty(Vector2 position) {
-        b2BodyDef body_def = b2DefaultBodyDef();
-        body_def.type = b2_staticBody;
-        body_def.position = {position.x,position.y};
-        this->id = b2CreateBody(world_id, &body_def);
-    }
-    void draw() {
-        Vector2 position = getPos();
-        DrawLineV(position-Vector2{0,1},position+Vector2{0,1},BLACK);
-        DrawLineV(position-Vector2{1,0},position+Vector2{1,0},BLACK);
-    }
-};
 class Box : public Body {
     b2ShapeId shape_id;
 public:
