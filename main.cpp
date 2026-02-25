@@ -5,6 +5,7 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
+#include "plugins/debugdraw.h"
 
 int main(int argc, char **argv) {
     // Define window dimensions
@@ -54,6 +55,7 @@ int main(int argc, char **argv) {
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         DrawCircleV({0,0},0.5f,GRAY);
+        DrawJoint(distance_joint.id);
         box.draw();
         EndMode2D();
         EndDrawing();
