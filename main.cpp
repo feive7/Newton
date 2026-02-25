@@ -29,24 +29,23 @@ int main(int argc, char **argv) {
     float timestep = 1.0f / 60.0f;
     int substep_count = 4;
 
-    // Create box box
-    Box box({10,10},{1,1},false);
-
-    // Create empty body to attach our box to
+    // Create empty body to attach our pendulums to
     Empty empty({0,0});
 
+    Box bob1({10,0},{1,1},false);
+    Box bob2({20,0},{1,1},false);
+
     // Attach them
-    DistanceJoint distance_joint(&box,&empty,10);
-    distance_joint.enableSpring();
-    distance_joint.setSpringHertz(10);
+    DistanceJoint pendulum1(&empty,&bob1,10);
+    DistanceJoint pendulum2(&bob1,&bob2,10);
     // b2JointId id = distance_joint.id;
 
     // Main loop
     while(!WindowShouldClose()) {
         if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(),viewport);
-            Vector2 force_direction = mouse_position - box.getPos();
-            box.setVelocity(force_direction * 100);
+            Vector2 force_direction = mouse_position - bob2.getPos();
+            bob2.setVelocity(force_direction * 100);
         }
 
         PhysicsStep(timestep, substep_count);
@@ -55,8 +54,10 @@ int main(int argc, char **argv) {
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         DrawCircleV({0,0},0.5f,GRAY);
-        DrawJoint(distance_joint.id);
-        box.draw();
+        bob1.draw();
+        bob2.draw();
+        DrawJoint(pendulum1.id);
+        DrawJoint(pendulum2.id);
         EndMode2D();
         EndDrawing();
     }
