@@ -34,10 +34,12 @@ int main(int argc, char **argv) {
 
     Box bob1({10,0},{1,1},false);
     Box bob2({20,0},{1,1},false);
+    Box bob3({30,0},{1,1},false);
 
     // Attach them
     DistanceJoint pendulum1(&empty,&bob1,10);
     DistanceJoint pendulum2(&bob1,&bob2,10);
+    DistanceJoint pendulum3(&bob2,&bob3,10);
     // b2JointId id = distance_joint.id;
 
     // Main loop
@@ -56,8 +58,10 @@ int main(int argc, char **argv) {
         DrawCircleV({0,0},0.5f,GRAY);
         bob1.draw();
         bob2.draw();
+        bob3.draw();
         DrawJoint(pendulum1.id);
         DrawJoint(pendulum2.id);
+        DrawJoint(pendulum3.id);
         EndMode2D();
         EndDrawing();
     }
