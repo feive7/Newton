@@ -37,18 +37,24 @@ int main(int argc, char **argv) {
     // Attach them
     DistanceJoint distance_joint(&box,&empty,10);
     distance_joint.enableSpring();
-    distance_joint.setSpringHertz(0.5);
+    distance_joint.setSpringHertz(10);
     // b2JointId id = distance_joint.id;
 
     // Main loop
     while(!WindowShouldClose()) {
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(),viewport);
+            Vector2 force_direction = mouse_position - box.getPos();
+            box.setVelocity(force_direction * 100);
+        }
+
         PhysicsStep(timestep, substep_count);
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(viewport);
         DrawCircleV({0,0},0.5f,GRAY);
-        DrawCircleV(box.getPos(),0.5f,RED);
+        box.draw();
         EndMode2D();
         EndDrawing();
     }
