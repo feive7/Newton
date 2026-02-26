@@ -1,8 +1,13 @@
-# Kdevelop files
+# Linux Kdevelop files
 *.kate-swp
 *.kdev4
 build/*
 .kdev4/*
 
+# Microft Visual Studio files
+.vs/*
+out/*
+
 # 3rd party libraries
+raylib/*
 box2d/*

@@ -7,57 +7,57 @@
 #include "plugins/primitivejoint.h"
 #include "plugins/debugdraw.h"
 
-int main(int argc, char **argv) {
-    // Define window dimensions
-    const int window_width = 800;
-    const int window_height = 450;
+int main(int argc, char** argv) {
+	// Define window dimensions
+	const int window_width = 800;
+	const int window_height = 450;
 
-    // Create window
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(window_width,window_height,"Newton");
-    SetTargetFPS(60);
+	// Create window
+	SetConfigFlags(FLAG_MSAA_4X_HINT);
+	InitWindow(window_width, window_height, "Newton");
+	SetTargetFPS(60);
 
-    // Create viewport
-    Camera2D viewport;
-    viewport.offset = {400,225};
-    viewport.rotation = 180.0f;
-    viewport.target = {0,0};
-    viewport.zoom = 10.0f;
+	// Create viewport
+	Camera2D viewport;
+	viewport.offset = { 400,225 };
+	viewport.rotation = 180.0f;
+	viewport.target = { 0,0 };
+	viewport.zoom = 10.0f;
 
-    // Initialize physics
-    InitPhysics();
-    float timestep = 1.0f / 60.0f;
-    int substep_count = 4;
+	// Initialize physics
+	InitPhysics();
+	float timestep = 1.0f / 60.0f;
+	int substep_count = 4;
 
-    // Create empty body to create a slider
-    Empty empty({0,0});
-    Box box({10,0},{1,1},false);
+	// Create empty body to create a slider
+	Empty empty({ 0,0 });
+	Box box({ 10,0 }, { 1,1 }, false);
 
-    // Create slider
-    SliderJoint slider_joint(&empty,&box);
+	// Create slider
+	SliderJoint slider_joint(&empty, &box);
 
-    // Main loop
-    while(!WindowShouldClose()) {
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(),viewport);
-            Vector2 force_direction = mouse_position - box.getPos();
-            box.setVelocity(force_direction * 100);
-        }
+	// Main loop
+	while (!WindowShouldClose()) {
+		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
+			Vector2 force_direction = mouse_position - box.getPos();
+			box.setVelocity(force_direction * 100);
+		}
 
-        PhysicsStep(timestep, substep_count);
+		PhysicsStep(timestep, substep_count);
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        BeginMode2D(viewport);
-        DrawCircleV({0,0},0.5f,GRAY);
-        DrawJoint(slider_joint.id);
-        box.draw();
-        EndMode2D();
-        EndDrawing();
-    }
+		BeginDrawing();
+		ClearBackground(RAYWHITE);
+		BeginMode2D(viewport);
+		DrawCircleV({ 0,0 }, 0.5f, GRAY);
+		DrawJoint(slider_joint.id);
+		box.draw();
+		EndMode2D();
+		EndDrawing();
+	}
 
-    // Destroy window
-    CloseWindow();
+	// Destroy window
+	CloseWindow();
 
-    return 0;
+	return 0;
 }
