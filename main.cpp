@@ -5,6 +5,7 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
+#include "plugins/polybody.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
@@ -29,19 +30,19 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create empty body to create a slider
-	Empty empty({ 0,0 });
-	Box box({ 10,0 }, { 1,1 }, false);
+	// Create ground
+	Box box({ 0,0 }, {10,1}, true);
 
-	// Create slider
-	SliderJoint slider_joint(&empty, &box);
+	// Create polybody
+	PolyBody polybody({0,10}, CreateRegularPolygon(8,5.0f), false);
+	polybody.setFriction(10.0f);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - box.getPos();
-			box.setVelocity(force_direction * 100);
+			Vector2 force_direction = mouse_position - polybody.getPos();
+			polybody.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -49,9 +50,8 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		DrawCircleV({ 0,0 }, 0.5f, GRAY);
-		DrawJoint(slider_joint.id);
 		box.draw();
+		polybody.draw();
 		EndMode2D();
 		EndDrawing();
 	}

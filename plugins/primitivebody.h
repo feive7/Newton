@@ -1,6 +1,5 @@
 #pragma once
 class Box : public Body {
-	b2ShapeId shape_id;
 public:
 	Vector2 size;
 	Box(Vector2 position, Vector2 size, bool fixed) : size(size) {
@@ -15,7 +14,7 @@ public:
 		shape_def.density = 1.0f;
 		shape_def.material.friction = 0.3f;
 
-		shape_id = b2CreatePolygonShape(this->id, &shape_def, &box);
+		b2CreatePolygonShape(this->id, &shape_def, &box);
 	}
 	void draw() {
 		Vector2 position = getPos() - size;
@@ -28,7 +27,6 @@ public:
 };
 
 class Ball : public Body {
-	b2ShapeId shape_id;
 public:
 	float radius;
 	Ball(Vector2 position, float radius, bool fixed) : radius(radius) {

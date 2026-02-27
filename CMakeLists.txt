@@ -9,6 +9,7 @@ endif()
 
 find_package(raylib)
 find_package(box2d)
+include_directories(../Libraries/rPoly/)
 add_executable(newton main.cpp)
 target_link_libraries(newton raylib)
 target_link_libraries(newton box2d)
