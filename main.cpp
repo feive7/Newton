@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 
 	// Create window
 	SetConfigFlags(FLAG_MSAA_4X_HINT);
-	InitWindow(window_width, window_height, "Newton");
+	InitWindow(window_width, window_height, "Newton Demo");
 	SetTargetFPS(60);
 
 	// Create viewport
