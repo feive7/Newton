@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	// Create viewport
 	Camera2D viewport;
-	viewport.offset = { 400,225 };
+	viewport.offset = { 400,450 };
 	viewport.rotation = 180.0f;
 	viewport.target = { 0,0 };
 	viewport.zoom = 10.0f;
@@ -32,17 +32,26 @@ int main(int argc, char** argv) {
 	int substep_count = 4;
 
 	// Create ground
-	BoxBody ground_body({0,0},{10,1},true);
+	BoxBody ground({0,0},{10,1},true);
 
-	// Create dynamic body
-	BallBody ball_body({0,10},1.0f,false);
+	// Create box tower
+	BoxBody boxes[10];
+	for(int i = 0; i < 10; i++) {
+		float y = 2.1*float(i)+2;
+		boxes[i] = BoxBody({0,y},{1,1},false);
+	}
+
+	// Create wrecking ball
+	EmptyBody constraint({0,25});
+	BallBody wrecking_ball({-10,25},3.0f,false);
+	DistanceJoint line(&constraint,&wrecking_ball,15);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - ball_body.getPos();
-			ball_body.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - wrecking_ball.getPos();
+			wrecking_ball.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -50,8 +59,12 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		ground_body.draw();
-		ball_body.draw();
+		ground.draw();
+		wrecking_ball.draw();
+		for(int i = 0; i < 10; i++) {
+			boxes[i].draw();
+		}
+		DrawJoint(line.id);
 		EndMode2D();
 		EndDrawing();
 	}
