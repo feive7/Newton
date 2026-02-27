@@ -1,8 +1,8 @@
 #pragma once
-class Box : public Body {
+class BoxBody : public Body {
 public:
 	Vector2 size;
-	Box(Vector2 position, Vector2 size, bool fixed) : size(size) {
+	BoxBody(Vector2 position, Vector2 size, bool fixed) : size(size) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
 		body_def.position = { position.x,position.y };
@@ -26,10 +26,10 @@ public:
 	}
 };
 
-class Ball : public Body {
+class BallBody : public Body {
 public:
 	float radius;
-	Ball(Vector2 position, float radius, bool fixed) : radius(radius) {
+	BallBody(Vector2 position, float radius, bool fixed) : radius(radius) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
 		body_def.position = { position.x,position.y };

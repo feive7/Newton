@@ -31,30 +31,18 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create tumbler motor base
-	Empty motor_base({0,0});
+	// Create ground
+	BoxBody ground_body({0,0},{10,1},true);
 
-	// Create tumbler
-	CustomBody tumbler = CustomBody()
-	.addBox({10,0},{1,10})
-	.addBox({-10,0},{1,10})
-	.addBox({0,10},{10,1})
-	.addBox({0,-10},{10,1})
-	.build({0,0},false);
-
-	// Connect tumbler to its pin point
-	Motor motor_joint(&tumbler,&motor_base);
-	motor_joint.setSpeed(1);
-
-	// Create polybody
-	Box box({0,0}, {1,1}, false);
+	// Create dynamic body
+	BallBody ball_body({0,10},1.0f,false);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - box.getPos();
-			box.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - ball_body.getPos();
+			ball_body.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -62,8 +50,8 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		tumbler.draw();
-		box.draw();
+		ground_body.draw();
+		ball_body.draw();
 		EndMode2D();
 		EndDrawing();
 	}

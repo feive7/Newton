@@ -39,7 +39,7 @@ public:
 		this->id = b2CreateRevoluteJoint(world_id, &revolute_joint_def);
 	}
 };
-class Motor : public Joint {
+class MotorJoint : public Joint {
 public:
 	Motor(Body* body_a, Body* body_b) {
 		b2RevoluteJointDef revolute_joint_def = b2DefaultRevoluteJointDef();

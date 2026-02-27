@@ -29,9 +29,9 @@ public:
 		}
 	}
 };
-class Empty : public Body {
+class EmptyBody : public Body {
 public:
-	Empty(Vector2 position) {
+	EmptyBody(Vector2 position) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = b2_staticBody;
 		body_def.position = { position.x,position.y };
