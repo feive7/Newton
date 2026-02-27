@@ -28,6 +28,11 @@ public:
 			b2Shape_SetRestitution(shape, new_bounciness);
 		}
 	}
+	void destroy() {
+		if(B2_IS_NULL(id)) return; // Make sure body hasn't already been destroyed'
+		b2DestroyBody(id);
+		this->id = b2_nullBodyId;
+	}
 };
 class EmptyBody : public Body {
 public:

@@ -16,5 +16,9 @@ public:
 	Vector2 getOffsetB() { return B2R(b2Joint_GetLocalAnchorA(id)); }
 	void setOffsetB(Vector2 offset) { b2Joint_SetLocalAnchorB(id, R2B(offset)); }
 
-	void destroy() { b2DestroyJoint(id); }
+	void destroy() {
+		if(B2_IS_NULL(id)) return; // Make sure joint hasn't already been destroyed'
+		b2DestroyJoint(id);
+		id = b2_nullJointId;
+	}
 };
