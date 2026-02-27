@@ -32,28 +32,28 @@ int main(int argc, char** argv) {
 	int substep_count = 4;
 
 	// Create two blocking boxes
-	Body* box_a = new BoxBody({-5,0},{1,1},true);
-	Body* box_b = new BoxBody({5,0},{1,1},true);
+	BoxBody box_a = BoxBody({-5,0},{1,1},true);
+	BoxBody box_b = BoxBody({5,0},{1,1},true);
 
 	// Create ball
-	Body* ball = new BallBody({0,0},2.0f,false);
+	BallBody ball = BallBody({0,0},2.0f,false);
 
 	// Create empty
-	Body* empty = new EmptyBody({0,10});
+	EmptyBody empty = EmptyBody({0,10});
 
 	// Connect ball to empty
-	DistanceJoint* tether = new DistanceJoint(ball,empty,10.0f);
+	DistanceJoint tether = DistanceJoint(&ball,&empty,10.0f);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - ball->getPos();
-			ball->setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - ball.getPos();
+			ball.setVelocity(force_direction * 10);
 		}
 		if (IsKeyPressed(KEY_SPACE)) {
-			box_a->destroy();
-			box_b->destroy();
+			box_a.destroy();
+			box_b.destroy();
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -61,18 +61,13 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		box_a->draw();
-		box_b->draw();
-		ball->draw();
-		DrawJoint(tether->id);
+		box_a.draw();
+		box_b.draw();
+		ball.draw();
+		DrawJoint(tether.id);
 		EndMode2D();
 		EndDrawing();
 	}
-
-	delete box_a;
-	delete box_b;
-	delete tether;
-	delete ball;
 
 	// Destroy window
 	CloseWindow();

@@ -8,7 +8,6 @@ public:
 	Body() {}
 	Body(b2BodyId id) : id(id) {}
 	virtual ~Body() {
-		printf("Destroying\n");
 		destroy();
 	}
 	virtual void draw() {
