@@ -41,7 +41,7 @@ public:
 };
 class MotorJoint : public Joint {
 public:
-	Motor(Body* body_a, Body* body_b) {
+	MotorJoint(Body* body_a, Body* body_b) {
 		b2RevoluteJointDef revolute_joint_def = b2DefaultRevoluteJointDef();
 		revolute_joint_def.bodyIdA = body_a->id;
 		revolute_joint_def.bodyIdB = body_b->id;
