@@ -7,6 +7,13 @@ public:
 	b2BodyId id;
 	Body() {}
 	Body(b2BodyId id) : id(id) {}
+	virtual ~Body() {
+		printf("Destroying\n");
+		destroy();
+	}
+	virtual void draw() {
+		printf("This body has no overidden draw function\n");
+	}
 	bool isValid() { return b2Body_IsValid(id); }
 	Vector2 getPos() { return B2R(b2Body_GetPosition(id)); }
 	float getAng() { return b2Rot_GetAngle(b2Body_GetRotation(id)); }
@@ -29,7 +36,7 @@ public:
 		}
 	}
 	void destroy() {
-		if(B2_IS_NULL(id)) return; // Make sure body hasn't already been destroyed'
+		if(B2_IS_NULL(id)) return; // Make sure body hasn't already been destroyed
 		b2DestroyBody(id);
 		this->id = b2_nullBodyId;
 	}

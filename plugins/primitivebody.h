@@ -18,6 +18,7 @@ public:
 		b2CreatePolygonShape(this->id, &shape_def, &box);
 	}
 	void draw() {
+		if(!isValid()) return;
 		Vector2 position = getPos() - size;
 		float angle = getAng() * RAD2DEG;
 		Rectangle rect1 = { position.x + size.x,position.y + size.y,2 * size.x,2 * size.y };
@@ -48,6 +49,7 @@ public:
 		b2CreateCircleShape(this->id, &shape_def, &circle);
 	}
 	void draw() {
+		if(!isValid()) return;
 		Vector2 position = getPos();
 		float angle = getAng();
 		DrawCircleV(position, radius, BLUE);
