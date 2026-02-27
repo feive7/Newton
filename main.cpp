@@ -4,9 +4,7 @@
 
 #include "newton.h"
 #include "plugins/primitivebody.h"
-#include "plugins/custombody.h"
 #include "plugins/primitivejoint.h"
-#include "plugins/polybody.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
