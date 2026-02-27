@@ -2,6 +2,7 @@
 class BoxBody : public Body {
 public:
 	Vector2 size;
+	BoxBody() {}
 	BoxBody(Vector2 position, Vector2 size, bool fixed) : size(size) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
@@ -29,6 +30,7 @@ public:
 class BallBody : public Body {
 public:
 	float radius;
+	BallBody() {}
 	BallBody(Vector2 position, float radius, bool fixed) : radius(radius) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
