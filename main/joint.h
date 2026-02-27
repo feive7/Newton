@@ -3,6 +3,7 @@ class Joint {
 protected:
 public:
 	b2JointId id;
+	Joint() {}
 	~Joint() {
 		destroy();
 	}
