@@ -39,3 +39,21 @@ public:
 		this->id = b2CreateRevoluteJoint(world_id, &revolute_joint_def);
 	}
 };
+class Motor : public Joint {
+public:
+	Motor(Body* body_a, Body* body_b) {
+		b2RevoluteJointDef revolute_joint_def = b2DefaultRevoluteJointDef();
+		revolute_joint_def.bodyIdA = body_a->id;
+		revolute_joint_def.bodyIdB = body_b->id;
+		this->id = b2CreateRevoluteJoint(world_id, &revolute_joint_def);
+
+		b2RevoluteJoint_EnableMotor(id,true);
+		b2RevoluteJoint_SetMaxMotorTorque(id,10000000);
+	}
+	float getSpeed() {
+		return b2RevoluteJoint_GetMotorSpeed(id);
+	}
+	void setSpeed(float new_speed) {
+		b2RevoluteJoint_SetMotorSpeed(id,new_speed);
+	}
+};

@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create tumbler pin
-	Empty pin_point({0,0});
+	// Create tumbler motor base
+	Empty motor_base({0,0});
 
 	// Create tumbler
 	CustomBody tumbler = CustomBody()
@@ -43,7 +43,8 @@ int main(int argc, char** argv) {
 	.build({0,0},false);
 
 	// Connect tumbler to its pin point
-	RevoluteJoint pin_joint(&tumbler,&pin_point);
+	Motor motor_joint(&tumbler,&motor_base);
+	motor_joint.setSpeed(1);
 
 	// Create polybody
 	Box box({0,0}, {1,1}, false);
