@@ -4,6 +4,7 @@
 
 #include "newton.h"
 #include "plugins/primitivebody.h"
+#include "plugins/custombody.h"
 #include "plugins/primitivejoint.h"
 #include "plugins/polybody.h"
 #include "plugins/debugdraw.h"
@@ -30,19 +31,29 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create ground
-	Box box({ 0,0 }, {10,1}, true);
+	// Create tumbler pin
+	Empty pin_point({0,0});
+
+	// Create tumbler
+	CustomBody tumbler = CustomBody()
+	.addBox({10,0},{1,10})
+	.addBox({-10,0},{1,10})
+	.addBox({0,10},{10,1})
+	.addBox({0,-10},{10,1})
+	.build({0,0},false);
+
+	// Connect tumbler to its pin point
+	RevoluteJoint pin_joint(&tumbler,&pin_point);
 
 	// Create polybody
-	PolyBody polybody({0,10}, CreateRegularPolygon(8,5.0f), false);
-	polybody.setFriction(10.0f);
+	Box box({0,0}, {1,1}, false);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - polybody.getPos();
-			polybody.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - box.getPos();
+			box.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -50,8 +61,8 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
+		tumbler.draw();
 		box.draw();
-		polybody.draw();
 		EndMode2D();
 		EndDrawing();
 	}
