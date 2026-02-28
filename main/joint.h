@@ -4,7 +4,7 @@ protected:
 public:
 	b2JointId id;
 	Joint() {}
-	~Joint() {
+	virtual ~Joint() {
 		destroy();
 	}
 	b2JointType getType() { return b2Joint_GetType(id); }
