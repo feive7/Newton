@@ -54,7 +54,12 @@ int main(int argc, char** argv) {
 			ball.applyForce({-100,0});
 		}
 		if (IsKeyPressed(KEY_SPACE)) {
-			track.dettach(&ball);
+			if(track.isAttachedTo(&ball)) {
+				track.dettach(&ball);
+			}
+			else {
+				track.attach(&ball);
+			}
 		}
 
 		PhysicsStep(timestep, substep_count);

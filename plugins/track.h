@@ -22,7 +22,11 @@ public:
     void draw() {
         DrawLineV(start_point,end_point,BLACK);
     }
+    bool isAttachedTo(Body* body) {
+        return joint_map.find(body) != joint_map.end();
+    }
     void attach(Body* body) {
+        if(isAttachedTo(body)) return; // Already attached
         b2PrismaticJointDef pjoint_def = b2DefaultPrismaticJointDef();
         pjoint_def.bodyIdA = track_body->id;
         pjoint_def.bodyIdB = body->id;
@@ -36,9 +40,10 @@ public:
         joint_map[body] = joint_id_int;
     }
     void dettach(Body* body) {
-        if(joint_map.find(body) == joint_map.end()) return;
+        if(!isAttachedTo(body)) return; // Not attached
         b2JointId id = b2LoadJointId(joint_map[body]);
         b2DestroyJoint(id);
         joint_map.erase(body);
     }
+
 };
