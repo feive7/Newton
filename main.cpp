@@ -5,6 +5,7 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
+#include "plugins/collection.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
@@ -29,29 +30,31 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
+	// Create scene collection
+	Collection<4,1> scene;
+
 	// Create two blocking boxes
-	BoxBody box_a = BoxBody({-5,0},{1,1},true);
-	BoxBody box_b = BoxBody({5,0},{1,1},true);
+	scene.add(new BoxBody({-5,0},{1,1},true));
+	scene.add(new BoxBody({5,0},{1,1},true));
 
 	// Create ball
-	BallBody ball = BallBody({0,0},2.0f,false);
+	Body* ball = scene.add(new BallBody({0,0},2.0f,false));
 
 	// Create empty
-	EmptyBody empty = EmptyBody({0,10});
+	Body* empty = scene.add(new EmptyBody({0,10}));
 
 	// Connect ball to empty
-	DistanceJoint tether = DistanceJoint(&ball,&empty,10.0f);
+	Joint* tether = scene.add(new DistanceJoint(ball,empty,10.0f));
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - ball.getPos();
-			ball.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - ball->getPos();
+			ball->setVelocity(force_direction * 10);
 		}
 		if (IsKeyPressed(KEY_SPACE)) {
-			box_a.destroy();
-			box_b.destroy();
+			tether->destroy();
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -59,13 +62,13 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		box_a.draw();
-		box_b.draw();
-		ball.draw();
-		DrawJoint(tether.id);
+		scene.draw();
 		EndMode2D();
 		EndDrawing();
 	}
+
+	// Destroy Collection
+	scene.destroy();
 
 	// Destroy window
 	CloseWindow();
