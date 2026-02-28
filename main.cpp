@@ -5,6 +5,7 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
+#include "plugins/track.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
@@ -35,6 +36,10 @@ int main(int argc, char** argv) {
 	// Create ball
 	BallBody ball({0,5},1.0f,false);
 
+	// Create track
+	Track track({-5,5},{5,5});
+	track.attach(&ball);
+
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
@@ -48,6 +53,9 @@ int main(int argc, char** argv) {
 		if (IsKeyDown(KEY_RIGHT)) {
 			ball.applyForce({-100,0});
 		}
+		if (IsKeyPressed(KEY_SPACE)) {
+			track.dettach(&ball);
+		}
 
 		PhysicsStep(timestep, substep_count);
 
@@ -56,6 +64,7 @@ int main(int argc, char** argv) {
 		BeginMode2D(viewport);
 		ball.draw();
 		ground.draw();
+		track.draw();
 		EndMode2D();
 		EndDrawing();
 	}
