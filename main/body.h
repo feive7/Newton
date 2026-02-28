@@ -16,9 +16,17 @@ public:
 		DrawLineV(pos+Vector2{-1,1},pos-Vector2{-1,1},BLACK);
 	}
 	bool isValid() { return b2Body_IsValid(id); }
+
+	bool isEnabled() { return b2Body_IsEnabled(id); }
+	void enable() { b2Body_Enable(id); }
+	void disable() { b2Body_Disable(id); }
+	void toggle() { if (isEnabled()) disable(); else enable(); }
+
 	Vector2 getPos() { return B2R(b2Body_GetPosition(id)); }
 	float getAng() { return b2Rot_GetAngle(b2Body_GetRotation(id)); }
+
 	float getMass() { return b2Body_GetMass(id); }
+
 	void setVelocity(Vector2 new_velocity) { b2Body_SetLinearVelocity(id, R2B(new_velocity)); }
 	void setFriction(float new_friction) {
 		b2ShapeId shapes[10];

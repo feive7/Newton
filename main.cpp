@@ -31,20 +31,18 @@ int main(int argc, char** argv) {
 	int substep_count = 4;
 
 	// Create scene collection
-	Collection<4,1> scene;
+	Collection<5,0> scene;
 
-	// Create two blocking boxes
+	// Create fixed objects to scene
 	scene.add(new BoxBody({-5,0},{1,1},true));
 	scene.add(new BoxBody({5,0},{1,1},true));
+	scene.add(new BallBody({0,-4},4.0f,true));
 
-	// Create ball
-	Body* ball = scene.add(new BallBody({0,0},2.0f,false));
+	// Create controllable ball
+	Body* ball = scene.add(new BallBody({0,5 },2.0f,false));
 
-	// Create empty
-	Body* empty = scene.add(new EmptyBody({0,10}));
-
-	// Connect ball to empty
-	Joint* tether = scene.add(new DistanceJoint(ball,empty,10.0f));
+	// Create passive ball
+	scene.add(new BallBody({0,10},1.0f,false));
 
 	// Main loop
 	while (!WindowShouldClose()) {
@@ -54,7 +52,7 @@ int main(int argc, char** argv) {
 			ball->setVelocity(force_direction * 10);
 		}
 		if (IsKeyPressed(KEY_SPACE)) {
-			tether->destroy();
+			ball->toggle();
 		}
 
 		PhysicsStep(timestep, substep_count);
