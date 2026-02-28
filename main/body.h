@@ -53,6 +53,7 @@ public:
 };
 class EmptyBody : public Body {
 public:
+	EmptyBody() {}
 	EmptyBody(Vector2 position) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = b2_staticBody;
