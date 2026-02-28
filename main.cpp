@@ -5,7 +5,6 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
-#include "plugins/terrain.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
@@ -30,8 +29,8 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create terrain
-	Terrain terrain = RandomTerrain();
+	// Create ground
+	BoxBody ground({0,0},{10,0.4},true);
 
 	// Create ball
 	BallBody ball({0,5},1.0f,false);
@@ -56,7 +55,7 @@ int main(int argc, char** argv) {
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
 		ball.draw();
-		terrain.draw();
+		ground.draw();
 		EndMode2D();
 		EndDrawing();
 	}
