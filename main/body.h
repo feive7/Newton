@@ -11,7 +11,9 @@ public:
 		destroy();
 	}
 	virtual void draw() {
-		printf("This body has no overidden draw function\n");
+		Vector2 pos = getPos();
+		DrawLineV(pos+Vector2{1,1},pos-Vector2{1,1},BLACK);
+		DrawLineV(pos+Vector2{-1,1},pos-Vector2{-1,1},BLACK);
 	}
 	bool isValid() { return b2Body_IsValid(id); }
 	Vector2 getPos() { return B2R(b2Body_GetPosition(id)); }
