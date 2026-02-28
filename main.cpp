@@ -5,7 +5,7 @@
 #include "newton.h"
 #include "plugins/primitivebody.h"
 #include "plugins/primitivejoint.h"
-#include "plugins/collection.h"
+#include "plugins/terrain.h"
 #include "plugins/debugdraw.h"
 
 int main(int argc, char** argv) {
@@ -30,29 +30,24 @@ int main(int argc, char** argv) {
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
-	// Create scene collection
-	Collection<5,0> scene;
+	// Create terrain
+	Terrain terrain = RandomTerrain();
 
-	// Create fixed objects to scene
-	scene.add(new BoxBody({-5,0},{1,1},true));
-	scene.add(new BoxBody({5,0},{1,1},true));
-	scene.add(new BallBody({0,-4},4.0f,true));
-
-	// Create controllable ball
-	Body* ball = scene.add(new BallBody({0,5 },2.0f,false));
-
-	// Create passive ball
-	scene.add(new BallBody({0,10},1.0f,false));
+	// Create ball
+	BallBody ball({0,5},1.0f,false);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - ball->getPos();
-			ball->setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - ball.getPos();
+			ball.setVelocity(force_direction * 10);
 		}
-		if (IsKeyPressed(KEY_SPACE)) {
-			ball->toggle();
+		if (IsKeyDown(KEY_LEFT)) {
+			ball.applyForce({100,0});
+		}
+		if (IsKeyDown(KEY_RIGHT)) {
+			ball.applyForce({-100,0});
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -60,13 +55,11 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		scene.draw();
+		ball.draw();
+		terrain.draw();
 		EndMode2D();
 		EndDrawing();
 	}
-
-	// Destroy Collection
-	scene.destroy();
 
 	// Destroy window
 	CloseWindow();

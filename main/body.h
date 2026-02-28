@@ -28,6 +28,7 @@ public:
 	float getMass() { return b2Body_GetMass(id); }
 
 	void setVelocity(Vector2 new_velocity) { b2Body_SetLinearVelocity(id, R2B(new_velocity)); }
+	void applyForce(Vector2 force) { b2Body_ApplyForceToCenter(id, R2B(force), true); }
 	void setFriction(float new_friction) {
 		b2ShapeId shapes[10];
 		int shape_count = b2Body_GetShapes(id, shapes, 10);
