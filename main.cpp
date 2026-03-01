@@ -4,7 +4,6 @@
 
 #include "newton.h"
 #include "plugins/primitivebody.h"
-#include "plugins/custombody.h"
 
 int main(int argc, char** argv) {
 	// Define window dimensions
@@ -32,14 +31,12 @@ int main(int argc, char** argv) {
 	// Create ground
 	BoxBody ground({0,0},{10,0.4},true, GRAY);
 
-	// Create ball
-	BallBody ball({-2,5},1.0f,false,ORANGE);
+	// Create buttons
+	BoxBody red_button({-5,.8},{1,.4},true,RED);
+	BoxBody blue_button({5,.8},{1,.4},true,BLUE);
 
-	// Create custom body
-	CustomBody custom_body = CustomBody({2,5},false)
-	.addBox({0,0},{1,1},GREEN)
-	.addCircle({0,5},1,GREEN)
-	.addSegment({0,0},{0,5},PURPLE);
+	// Create ball
+	BallBody ball({0,5},1.0f,false,GRAY);
 
 	// Main loop
 	while (!WindowShouldClose()) {
@@ -47,6 +44,12 @@ int main(int argc, char** argv) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
 			Vector2 force_direction = mouse_position - ball.getPos();
 			ball.setVelocity(force_direction * 10);
+		}
+		if(ball.isTouching(&red_button)) {
+			ball.color = RED;
+		}
+		if(ball.isTouching(&blue_button)) {
+			ball.color = BLUE;
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -56,8 +59,10 @@ int main(int argc, char** argv) {
 		BeginMode2D(viewport);
 		ball.draw();
 		ground.draw();
-		custom_body.draw();
+		red_button.draw();
+		blue_button.draw();
 		EndMode2D();
+		//DrawText(TextFormat("%i",num_touching),5,5,20,BLACK);
 		EndDrawing();
 	}
 

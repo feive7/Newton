@@ -45,6 +45,23 @@ public:
 			b2Shape_SetRestitution(shape, new_bounciness);
 		}
 	}
+	int countTouching() {
+		b2ContactData contact_data[10];
+		return b2Body_GetContactData(id, contact_data, 10);
+	}
+	bool isTouching(Body* other) {
+		b2ContactData contact_data[10];
+		int contact_count = b2Body_GetContactData(id, contact_data, 10);
+		if(!contact_count) return false; // Not touching anything
+		for(int i = 0; i < contact_count; i++) {
+			b2BodyId contact_body_id = b2Shape_GetBody(contact_data[i].shapeIdA);
+			if(B2_ID_EQUALS(contact_body_id, other->id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	void destroy() {
 		if(B2_IS_NULL(id)) return; // Make sure body hasn't already been destroyed
 		b2DestroyBody(id);
