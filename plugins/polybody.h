@@ -6,7 +6,8 @@ class PolyBody : public Body {
     Polygon deflated_poly;
 public:
     Polygon poly;
-    PolyBody(Vector2 position, Polygon poly, bool fixed) : poly(poly) {
+    Color color;
+    PolyBody(Vector2 position, Polygon poly, bool fixed, Color color) : poly(poly), color(color) {
         b2BodyDef body_def = b2DefaultBodyDef();
         body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
         body_def.position = { position.x,position.y };
@@ -30,7 +31,7 @@ public:
     void draw() {
         Vector2 position = getPos();
         float angle = getAng();
-        DrawPolygon(position,PolygonRotate(poly,angle),PINK);
-        DrawPolygon(position,PolygonRotate(deflated_poly,angle),ColorBrightness(PINK, 0.4));
+        DrawPolygon(position,PolygonRotate(poly,angle),color);
+        DrawPolygon(position,PolygonRotate(deflated_poly,angle),ColorBrightness(color, 0.4));
     }
 };
