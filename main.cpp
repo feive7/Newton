@@ -36,30 +36,12 @@ int main(int argc, char** argv) {
 	// Create ball
 	BallBody ball({0,5},1.0f,false);
 
-	// Create track
-	Track track({-5,5},{5,5});
-	track.attach(&ball);
-
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
 			Vector2 force_direction = mouse_position - ball.getPos();
 			ball.setVelocity(force_direction * 10);
-		}
-		if (IsKeyDown(KEY_LEFT)) {
-			ball.applyForce({100,0});
-		}
-		if (IsKeyDown(KEY_RIGHT)) {
-			ball.applyForce({-100,0});
-		}
-		if (IsKeyPressed(KEY_SPACE)) {
-			if(track.isAttachedTo(&ball)) {
-				track.dettach(&ball);
-			}
-			else {
-				track.attach(&ball);
-			}
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -69,7 +51,6 @@ int main(int argc, char** argv) {
 		BeginMode2D(viewport);
 		ball.draw();
 		ground.draw();
-		track.draw();
 		EndMode2D();
 		EndDrawing();
 	}
