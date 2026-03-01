@@ -7,30 +7,33 @@ enum ShapeType {
 class Shape {
 public:
 	b2ShapeId id;
-	ShapeType type;
+	ShapeType type; // Box, Circle, Segment
 	Vector2 origin; // Box, Circle: {center_x, center_y} Segment: {startpoint_x, startpoint_y}
 	Vector2 size; // Box: {halfwidth, halfheight} Circle: {radius, 0} Segment: {endpoint_x, endpoint_y}
+	Color color;
+
 	float getFriction() { return b2Shape_GetFriction(id); }
-	float getBounciness() { return b2Shape_GetRestitution(id); }
 	void setFriction(float new_friction) { b2Shape_SetFriction(id, new_friction); }
+
+	float getBounciness() { return b2Shape_GetRestitution(id); }
 	void setBounciness(float new_bounciness) { b2Shape_SetRestitution(id, new_bounciness); }
 };
 void DrawShape(Shape shape, Vector2 position, float angle) {
 	if (shape.type == Shape_Box) {
 		Rectangle rect1 = { position.x,position.y,2 * shape.size.x,2 * shape.size.y };
 		Rectangle rect2 = { position.x,position.y,2 * shape.size.x - .5f,2 * shape.size.y - .5f };
-		DrawRectanglePro(rect1, shape.size - Vector2{ shape.origin.x,shape.origin.y }, angle * RAD2DEG, RED);
-		DrawRectanglePro(rect2, shape.size - Vector2{ shape.origin.x + .25f,shape.origin.y + .25f }, angle * RAD2DEG, ColorBrightness(RED, 0.4));
+		DrawRectanglePro(rect1, shape.size - Vector2{ shape.origin.x,shape.origin.y }, angle * RAD2DEG, shape.color);
+		DrawRectanglePro(rect2, shape.size - Vector2{ shape.origin.x + .25f,shape.origin.y + .25f }, angle * RAD2DEG, ColorBrightness(shape.color, 0.4));
 	}
 	else if (shape.type == Shape_Circle) {
-		DrawCircleV(position + Vector2Rotate(shape.origin, angle), shape.size.x, BLUE);
-		DrawCircleV(position + Vector2Rotate(shape.origin, angle), shape.size.x - 0.25, ColorBrightness(BLUE, 0.4));
-		DrawLineEx(position + Vector2Rotate(shape.origin, angle), position + Vector2Rotate({ shape.origin.x + shape.size.x,shape.origin.y }, angle), 0.4, BLUE);
+		DrawCircleV(position + Vector2Rotate(shape.origin, angle), shape.size.x, shape.color);
+		DrawCircleV(position + Vector2Rotate(shape.origin, angle), shape.size.x - 0.25, ColorBrightness(shape.color, 0.4));
+		DrawLineEx(position + Vector2Rotate(shape.origin, angle), position + Vector2Rotate({ shape.origin.x + shape.size.x,shape.origin.y }, angle), 0.4, shape.color);
 	}
 	else if (shape.type == Shape_Segment) {
 		Vector2 startpoint = Vector2Rotate({ shape.origin }, angle);
 		Vector2 endpoint = Vector2Rotate({ shape.size }, angle);
-		DrawLineV(position + startpoint, position + endpoint, GREEN);
+		DrawLineV(position + startpoint, position + endpoint, shape.color);
 	}
 }
 class CustomBody : public Body {
@@ -46,7 +49,7 @@ public:
 
 		shape_count = 0;
 	}
-	CustomBody& addCircle(Vector2 circle_origin, float circle_radius) {
+	CustomBody& addCircle(Vector2 circle_origin, float circle_radius, Color circle_color) {
 		Shape& new_circle = this->shapes[shape_count];
 		new_circle.type = Shape_Circle;
 		new_circle.origin = circle_origin;
@@ -61,11 +64,12 @@ public:
 		shape_def.material.friction = 0.3f;
 
 		new_circle.id = b2CreateCircleShape(this->id, &shape_def, &circle);
+		new_circle.color = circle_color;
 
 		shape_count++;
 		return *this;
 	}
-	CustomBody& addBox(Vector2 box_origin, Vector2 box_size) {
+	CustomBody& addBox(Vector2 box_origin, Vector2 box_size, Color box_color) {
 		Shape& new_box = this->shapes[shape_count];
 		new_box.type = Shape_Box;
 		new_box.origin = box_origin;
@@ -77,11 +81,12 @@ public:
 		shape_def.material.friction = 0.3f;
 
 		new_box.id = b2CreatePolygonShape(this->id, &shape_def, &box);
+		new_box.color = box_color;
 
 		shape_count++;
 		return *this;
 	}
-	CustomBody& addSegment(Vector2 segment_start, Vector2 segment_end) {
+	CustomBody& addSegment(Vector2 segment_start, Vector2 segment_end, Color segment_color) {
 		Shape& new_segment = this->shapes[shape_count];
 		new_segment.type = Shape_Segment;
 		new_segment.origin = segment_start;
@@ -95,6 +100,7 @@ public:
 		shape_def.material.friction = 0.3f;
 
 		new_segment.id = b2CreateSegmentShape(this->id, &shape_def, &segment);
+		new_segment.color = segment_color;
 
 		shape_count++;
 		return *this;

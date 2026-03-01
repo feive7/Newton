@@ -2,7 +2,8 @@
 class BoxBody : public Body {
 public:
 	Vector2 size;
-	BoxBody(Vector2 position, Vector2 size, bool fixed) : size(size) {
+	Color color;
+	BoxBody(Vector2 position, Vector2 size, bool fixed, Color color) : size(size), color(color) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
 		body_def.position = { position.x,position.y };
@@ -22,15 +23,16 @@ public:
 		float angle = getAng() * RAD2DEG;
 		Rectangle rect1 = { position.x + size.x,position.y + size.y,2 * size.x,2 * size.y };
 		Rectangle rect2 = { position.x + size.x,position.y + size.y,2 * size.x - .5f,2 * size.y - .5f };
-		DrawRectanglePro(rect1, size, angle, RED);
-		DrawRectanglePro(rect2, size - Vector2{ .25f,.25f }, angle, ColorBrightness(RED, 0.4));
+		DrawRectanglePro(rect1, size, angle, color);
+		DrawRectanglePro(rect2, size - Vector2{ .25f,.25f }, angle, ColorBrightness(color, 0.4));
 	}
 };
 
 class BallBody : public Body {
 public:
 	float radius;
-	BallBody(Vector2 position, float radius, bool fixed) : radius(radius) {
+	Color color;
+	BallBody(Vector2 position, float radius, bool fixed, Color color) : radius(radius), color(color) {
 		b2BodyDef body_def = b2DefaultBodyDef();
 		body_def.type = (fixed ? b2_staticBody : b2_dynamicBody);
 		body_def.position = { position.x,position.y };
@@ -50,8 +52,8 @@ public:
 		if(!isValid()) return;
 		Vector2 position = getPos();
 		float angle = getAng();
-		DrawCircleV(position, radius, BLUE);
-		DrawCircleV(position, radius - 0.25, ColorBrightness(BLUE, 0.4));
-		DrawLineEx(position, position + Vector2Rotate({ radius,0 }, angle), 0.4, BLUE);
+		DrawCircleV(position, radius, color);
+		DrawCircleV(position, radius - 0.25, ColorBrightness(color, 0.4));
+		DrawLineEx(position, position + Vector2Rotate({ radius,0 }, angle), 0.4, color);
 	}
 };

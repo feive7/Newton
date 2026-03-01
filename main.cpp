@@ -30,19 +30,23 @@ int main(int argc, char** argv) {
 	int substep_count = 4;
 
 	// Create ground
-	BoxBody ground({0,0},{10,0.4},true);
+	BoxBody ground({0,0},{10,0.4},true, GRAY);
+
+	// Create ball
+	BallBody ball({-2,5},1.0f,false,ORANGE);
 
 	// Create custom body
-	CustomBody custom_body = CustomBody({0,5},false)
-	.addBox({0,0},{1,1})
-	.addCircle({0,2},1);
+	CustomBody custom_body = CustomBody({2,5},false)
+	.addBox({0,0},{1,1},GREEN)
+	.addCircle({0,5},1,GREEN)
+	.addSegment({0,0},{0,5},PURPLE);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - custom_body.getPos();
-			custom_body.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - ball.getPos();
+			ball.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -50,8 +54,9 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		custom_body.draw();
+		ball.draw();
 		ground.draw();
+		custom_body.draw();
 		EndMode2D();
 		EndDrawing();
 	}
