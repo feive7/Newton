@@ -8,7 +8,7 @@ public:
 	Body() {}
 	Body(b2BodyId id) : id(id) {}
 	virtual ~Body() {
-		destroy();
+		//destroy();
 	}
 	virtual void draw() {
 		Vector2 pos = getPos();

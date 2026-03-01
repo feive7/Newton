@@ -4,9 +4,7 @@
 
 #include "newton.h"
 #include "plugins/primitivebody.h"
-#include "plugins/primitivejoint.h"
-#include "plugins/track.h"
-#include "plugins/debugdraw.h"
+#include "plugins/custombody.h"
 
 int main(int argc, char** argv) {
 	// Define window dimensions
@@ -27,21 +25,24 @@ int main(int argc, char** argv) {
 
 	// Initialize physics
 	InitPhysics();
+
 	float timestep = 1.0f / 60.0f;
 	int substep_count = 4;
 
 	// Create ground
 	BoxBody ground({0,0},{10,0.4},true);
 
-	// Create ball
-	BallBody ball({0,5},1.0f,false);
+	// Create custom body
+	CustomBody custom_body = CustomBody({0,5},false)
+	.addBox({0,0},{1,1})
+	.addCircle({0,2},1);
 
 	// Main loop
 	while (!WindowShouldClose()) {
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 			Vector2 mouse_position = GetScreenToWorld2D(GetMousePosition(), viewport);
-			Vector2 force_direction = mouse_position - ball.getPos();
-			ball.setVelocity(force_direction * 10);
+			Vector2 force_direction = mouse_position - custom_body.getPos();
+			custom_body.setVelocity(force_direction * 10);
 		}
 
 		PhysicsStep(timestep, substep_count);
@@ -49,7 +50,7 @@ int main(int argc, char** argv) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		BeginMode2D(viewport);
-		ball.draw();
+		custom_body.draw();
 		ground.draw();
 		EndMode2D();
 		EndDrawing();
