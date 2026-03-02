@@ -64,6 +64,12 @@ public:
 		}
 		return false;
 	}
+	void noCollide(Body* other) {
+		b2FilterJointDef filter_joint_def = b2DefaultFilterJointDef();
+		filter_joint_def.bodyIdA = this->id;
+		filter_joint_def.bodyIdB = other->id;
+		b2CreateFilterJoint(world_id, &filter_joint_def);
+	}
 
 	void destroy() {
 		if(B2_IS_NULL(id)) return; // Make sure body hasn't already been destroyed

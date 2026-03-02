@@ -37,6 +37,8 @@ int main(int argc, char** argv) {
 
 	// Create ball
 	BallBody ball({0,5},1.0f,false,GRAY);
+	ball.noCollide(&red_button);
+	ball.noCollide(&blue_button);
 
 	// Main loop
 	while (!WindowShouldClose()) {
